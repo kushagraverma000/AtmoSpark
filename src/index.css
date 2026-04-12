@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 220 25% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 10%;
+
+    --primary: 220 70% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 15% 94%;
+    --secondary-foreground: 220 25% 10%;
+
+    --muted: 220 15% 94%;
+    --muted-foreground: 220 10% 46%;
+
+    --accent: 220 15% 94%;
+    --accent-foreground: 220 25% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 91%;
+    --input: 220 15% 91%;
+    --ring: 220 70% 50%;
+
+    --radius: 0.75rem;
+
+    /* AtmoSpark custom tokens */
+    --risk-low: 152 60% 42%;
+    --risk-medium: 40 90% 50%;
+    --risk-high: 0 72% 55%;
+    --risk-low-bg: 152 60% 95%;
+    --risk-medium-bg: 40 90% 95%;
+    --risk-high-bg: 0 72% 96%;
+
+    --surface-elevated: 0 0% 100%;
+    --surface-subtle: 220 20% 97%;
+
+    --chat-user: 220 70% 96%;
+    --chat-ai: 220 15% 94%;
+
+    --shadow-card: 0 1px 2px hsl(220 25% 10% / 0.04), 0 4px 12px -2px hsl(220 25% 10% / 0.06);
+    --shadow-elevated: 0 8px 24px -4px hsl(220 25% 10% / 0.08), 0 4px 8px -4px hsl(220 25% 10% / 0.05);
+    --shadow-glow-low: 0 0 48px -8px hsl(152 60% 42% / 0.25);
+    --shadow-glow-medium: 0 0 52px -8px hsl(40 90% 50% / 0.28);
+    --shadow-glow-high: 0 0 56px -8px hsl(0 72% 55% / 0.3);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    font-size: 17px;
+  }
+  @media (max-width: 640px) {
+    html {
+      font-size: 16px;
+    }
+  }
+  body {
+    @apply bg-background text-foreground antialiased text-base;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .dashboard-page-bg {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse 120% 80% at 50% -20%, hsl(220 70% 50% / 0.09), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 100% 0%, hsl(200 65% 55% / 0.06), transparent 45%),
+      radial-gradient(ellipse 70% 50% at 0% 100%, hsl(220 40% 70% / 0.05), transparent 50%);
+  }
+
+  .dashboard-risk-tint-low {
+    --tint: 152 60% 42%;
+  }
+  .dashboard-risk-tint-medium {
+    --tint: 40 90% 50%;
+  }
+  .dashboard-risk-tint-high {
+    --tint: 0 72% 55%;
+  }
+
+  .dashboard-risk-tint-low,
+  .dashboard-risk-tint-medium,
+  .dashboard-risk-tint-high {
+    position: relative;
+  }
+
+  .dashboard-risk-tint-low::before,
+  .dashboard-risk-tint-medium::before,
+  .dashboard-risk-tint-high::before {
+    content: "";
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(ellipse 100% 60% at 50% 0%, hsl(var(--tint) / 0.045), transparent 58%);
+  }
+
+  .dashboard-risk-tint-low > *,
+  .dashboard-risk-tint-medium > *,
+  .dashboard-risk-tint-high > * {
+    position: relative;
+    z-index: 1;
+  }
+
+}
+
+@layer components {
+  .card-dashboard {
+    @apply rounded-xl border border-border/70 bg-card/90 backdrop-blur-sm shadow-card transition-all duration-200 ease-out;
+  }
+
+  .card-dashboard-interactive {
+    @apply rounded-xl border border-border/70 bg-card/90 backdrop-blur-sm shadow-card transition-all duration-200 ease-out;
+    @apply hover:shadow-elevated hover:border-border hover:-translate-y-0.5;
+  }
+}
