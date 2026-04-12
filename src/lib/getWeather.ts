@@ -1,7 +1,11 @@
 import { calculateRisk } from "@/lib/riskEngine";
 
 /** Same-origin `/api` in dev (Vite proxy) and prod (Express). */
-const weatherUrl = (path: string, query: string) => `/api/weather${path}?${query}`;
+// const weatherUrl = (path: string, query: string) => `/api/weather${path}?${query}`;
+
+res = await fetch(
+  `https://api.openweathermap.org/data/2.5/weather?q=${encoded}&appid=${import.meta.env.VITE_WEATHER_API_KEY}&units=metric`
+);
 
 export type CurrentWeatherData = {
   name: string;
@@ -62,7 +66,9 @@ export async function getWeather(city: string): Promise<WeatherFetchResult> {
   const encoded = encodeURIComponent(q);
   let res: Response;
   try {
-    res = await fetch(weatherUrl("/current", `q=${encoded}`));
+    res = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_WEATHER_API_KEY}&units=metric`
+    );
   } catch {
     return { ok: false, message: "Network error. Check your connection and try again." };
   }
