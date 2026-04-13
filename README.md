@@ -89,12 +89,16 @@ UI Dashboard + Chat Assistant
 
 ## 🖥️ Screenshots
 
-> *<img width="1470" height="956" alt="Screenshot 2026-04-12 at 5 02 56 PM" src="https://github.com/user-attachments/assets/02aaf96d-b416-4535-ab49-cd45b9874a01" />*
 
-- Dashboard View  
-- Risk Score Visualization  
-- Alerts & Recommendations  
-- Chat Assistant  
+
+- Dashboard View
+> *<img width="1470" height="956" alt="Screenshot 2026-04-14 at 1 23 28 AM" src="https://github.com/user-attachments/assets/1f02aa65-8287-43d8-846d-f6dbf054b41c" />*
+- Risk Score Visualization
+> *<img width="664" height="591" alt="Screenshot 2026-04-14 at 1 24 45 AM" src="https://github.com/user-attachments/assets/f88a3765-0f34-4674-b8da-712f1d3c34b6" />*
+- Alerts & Recommendations
+> *<img width="1470" height="731" alt="Screenshot 2026-04-14 at 1 25 42 AM" src="https://github.com/user-attachments/assets/b44ec621-1879-4ac4-b239-08626edc6058" />*
+- Chat Assistant
+> *<img width="692" height="911" alt="Screenshot 2026-04-14 at 1 26 41 AM" src="https://github.com/user-attachments/assets/37497c4b-8597-457f-8f23-36dc861a16e1" />*
 
 ---
 
