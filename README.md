@@ -68,7 +68,7 @@ AtmoSpark processes real-time environmental data and:
 - **Styling:** Tailwind CSS  
 - **Animations:** Framer Motion  
 - **APIs:** OpenWeather API  
-- **Deployment:** Vercel  
+- **Deployment:** Vercel (frontend), Render (backend)  
 
 ---
 
@@ -115,15 +115,43 @@ npm install
 
 4. Add environment variables
 
-Create a .env file:
+Create a `.env` file:
 
-VITE_WEATHER_API_KEY=your_openweather_api_key
-VITE_OPENROUTER_API_KEY=your_openrouter_key
+OPENWEATHER_API_KEY=your_openweather_api_key
+GEMINI_API_KEY=your_gemini_api_key
+
+# optional for local split testing only
+# VITE_API_BASE_URL=http://localhost:8787
 
 4. Run locally
 npm run dev
 5. Build for production
 npm run build
+
+## Deployment
+
+### Frontend on Vercel
+
+- Import this repo into Vercel
+- Framework preset: `Vite`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Set `VITE_API_BASE_URL` to your Render backend URL, for example `https://atmospark-api.onrender.com`
+
+`vercel.json` is already included so client-side routes like `/dashboard` rewrite to `index.html`.
+
+### Backend on Render
+
+- Create a new Render Web Service from this repo, or use the included `render.yaml`
+- Build command: `npm install`
+- Start command: `npm start`
+- Health check path: `/api/health`
+- Set these environment variables in Render:
+  - `OPENWEATHER_API_KEY`
+  - `GEMINI_API_KEY`
+  - `ALLOWED_ORIGINS=https://your-vercel-project.vercel.app`
+
+The backend now exposes CORS headers for the origins you list in `ALLOWED_ORIGINS`, and it no longer requires the frontend bundle to exist on Render.
 🌐 Live Demo
 
 atmo-spark.vercel.app

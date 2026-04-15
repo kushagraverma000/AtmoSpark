@@ -1,7 +1,8 @@
 import { calculateRisk } from "@/lib/riskEngine";
+import { apiUrl } from "@/lib/api";
 
-/** Same-origin `/api` in dev (Vite proxy) and prod (Express). */
-const weatherUrl = (path: string, query: string) => `/api/weather${path}?${query}`;
+/** Same-origin `/api` in dev, or Render API when `VITE_API_BASE_URL` is configured. */
+const weatherUrl = (path: string, query: string) => apiUrl(`/api/weather${path}?${query}`);
 
 export type CurrentWeatherData = {
   name: string;

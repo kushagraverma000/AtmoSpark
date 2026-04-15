@@ -1,29 +1,45 @@
-export async function getGeminiResponse(prompt: string, context: any) {
+import { apiUrl } from "@/lib/api";
+
+type GeminiContext = {
+  city?: string;
+  temp?: number;
+  humidity?: number;
+  feelsLike?: number;
+  windKmh?: number;
+  riskScore?: number;
+  riskLevel?: "low" | "medium" | "high";
+  alerts?: string[];
+};
+
+type GeminiResponse = {
+  text: string | null;
+  error: string | null;
+};
+
+export async function getGeminiResponse(
+  prompt: string,
+  context: GeminiContext,
+): Promise<GeminiResponse> {
   try {
-    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const res = await fetch(apiUrl("/api/chat/gemini"), {
       method: "POST",
       headers: {
-        Authorization: "Bearer YOUR_OPENROUTER_KEY",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-3.5-turbo",
-        messages: [
-          {
-            role: "user",
-            content: `User question: ${prompt}
-Temperature: ${context.temp}
-Humidity: ${context.humidity}
-City: ${context.city}`,
-          },
-        ],
+        question: prompt,
+        context,
       }),
     });
 
-    const data = await res.json();
-    return data?.choices?.[0]?.message?.content || null;
+    const data = (await res.json()) as Partial<GeminiResponse>;
+
+    return {
+      text: typeof data.text === "string" ? data.text : null,
+      error: typeof data.error === "string" ? data.error : null,
+    };
   } catch (err) {
     console.log(err);
-    return null;
+    return { text: null, error: "Network error. Check the backend URL and try again." };
   }
 }

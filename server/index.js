@@ -5,6 +5,7 @@
  */
 import express from "express";
 import dotenv from "dotenv";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -30,11 +31,42 @@ function normalizeApiKey(raw) {
 const app = express();
 const PORT = Number(process.env.PORT || 8787);
 const isProd = process.env.NODE_ENV === "production";
+const dist = path.join(root, "dist");
+const hasBuiltFrontend = fs.existsSync(path.join(dist, "index.html"));
+const shouldServeStatic = isProd && process.env.SERVE_STATIC_FRONTEND !== "false" && hasBuiltFrontend;
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const allowAllOrigins = allowedOrigins.length === 0;
+
+app.disable("x-powered-by");
 
 app.use(express.json({ limit: "120kb" }));
+app.use((req, res, next) => {
+  const origin = req.get("origin");
+
+  if (origin && (allowAllOrigins || allowedOrigins.includes(origin))) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.setHeader("Access-Control-Max-Age", "86400");
+  }
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  return next();
+});
 
 app.get("/api/health", (_, res) => {
-  res.json({ ok: true });
+  res.json({
+    ok: true,
+    environment: isProd ? "production" : "development",
+    staticFrontend: shouldServeStatic,
+  });
 });
 
 app.get("/api/weather/current", async (req, res) => {
@@ -233,8 +265,7 @@ app.post("/api/chat/gemini", async (req, res) => {
   }
 });
 
-if (isProd) {
-  const dist = path.join(root, "dist");
+if (shouldServeStatic) {
   app.use(express.static(dist));
   app.use((req, res) => {
     if (req.path.startsWith("/api")) {
@@ -245,8 +276,10 @@ if (isProd) {
 }
 
 app.listen(PORT, () => {
-  if (isProd) {
+  if (shouldServeStatic) {
     console.log(`Production app + API at http://localhost:${PORT}`);
+  } else if (isProd) {
+    console.log(`Production API at http://localhost:${PORT}`);
   } else {
     console.log(`API server at http://localhost:${PORT} (Vite proxies /api here in dev)`);
   }
@@ -255,5 +288,8 @@ app.listen(PORT, () => {
   }
   if (!process.env.OPENWEATHER_API_KEY?.trim()) {
     console.warn("[AtmoSpark] Set OPENWEATHER_API_KEY in .env for weather data.");
+  }
+  if (isProd && allowAllOrigins) {
+    console.warn("[AtmoSpark] ALLOWED_ORIGINS is not set; CORS is currently open to any browser origin.");
   }
 });
