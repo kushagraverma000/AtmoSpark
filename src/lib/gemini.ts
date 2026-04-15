@@ -3,8 +3,8 @@ export async function getGeminiResponse(prompt: string, context: any) {
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json"
+        Authorization: "Bearer YOUR_OPENROUTER_KEY",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "openai/gpt-3.5-turbo",
@@ -14,14 +14,13 @@ export async function getGeminiResponse(prompt: string, context: any) {
             content: `User question: ${prompt}
 Temperature: ${context.temp}
 Humidity: ${context.humidity}
-City: ${context.city}`
-          }
-        ]
-      })
+City: ${context.city}`,
+          },
+        ],
+      }),
     });
 
     const data = await res.json();
-
     return data?.choices?.[0]?.message?.content || null;
   } catch (err) {
     console.log(err);
